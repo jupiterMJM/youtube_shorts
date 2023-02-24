@@ -41,7 +41,7 @@ function close(){
 }
 
 function shorts(){
-   if (window.location.href.indexOf('shorts') == 24){
+   if (window.location.href.includes('shorts')){
         setTimeout(close, 100);}
     console.log(window.location.href)
 }
@@ -49,18 +49,28 @@ function shorts(){
 function remove_shorts_video(){
     let liste = document.querySelectorAll("#thumbnail");
     for (var i = 0; i<liste.length; i++){
-    if (liste[i].href.indexOf("shorts") == 24){
+    if (liste[i].tagName == 'A'){
+    if (liste[i].href.includes("shorts")){
         console.log(liste[i].href);
         liste[i].parentNode.parentNode.parentNode.remove();
-    }
+    }}
 }
 }
 
 (function() {
     'use strict';
     console.log("test");
-    window.addEventListener('load', function(){setTimeout(main, 200);});
+    window.addEventListener('load', function(){setTimeout(main, 1000);});
     setTimeout(close, 10*60*1000);
-    setTimeout(shorts, 1000);
-    setInterval(remove_shorts_video, 1000)
+    setTimeout(shorts,1000);
+    const observer = new MutationObserver(function(mutationsList) {
+    for (let mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+        remove_shorts_video(); // run your function here
+        }
+    }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    //setInterval(remove_shorts_video, 1000)
 })();
